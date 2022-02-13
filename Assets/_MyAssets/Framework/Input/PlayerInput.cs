@@ -35,6 +35,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left Button"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2e7aa56-310b-4a4e-bbd4-fbf84f2409db"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=0.1)"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""MouseMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bedcbaf4-678a-4e1c-b8c9-512bc8fad540"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left Button"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +77,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_MouseMove = m_Gameplay.FindAction("MouseMove", throwIfNotFound: true);
+        m_Gameplay_LeftButton = m_Gameplay.FindAction("Left Button", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -117,11 +138,13 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_MouseMove;
+    private readonly InputAction m_Gameplay_LeftButton;
     public struct GameplayActions
     {
         private @PlayerInput m_Wrapper;
         public GameplayActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @MouseMove => m_Wrapper.m_Gameplay_MouseMove;
+        public InputAction @LeftButton => m_Wrapper.m_Gameplay_LeftButton;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -134,6 +157,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @MouseMove.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMouseMove;
                 @MouseMove.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMouseMove;
                 @MouseMove.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMouseMove;
+                @LeftButton.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftButton;
+                @LeftButton.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftButton;
+                @LeftButton.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftButton;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -141,6 +167,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @MouseMove.started += instance.OnMouseMove;
                 @MouseMove.performed += instance.OnMouseMove;
                 @MouseMove.canceled += instance.OnMouseMove;
+                @LeftButton.started += instance.OnLeftButton;
+                @LeftButton.performed += instance.OnLeftButton;
+                @LeftButton.canceled += instance.OnLeftButton;
             }
         }
     }
@@ -148,5 +177,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnMouseMove(InputAction.CallbackContext context);
+        void OnLeftButton(InputAction.CallbackContext context);
     }
 }
